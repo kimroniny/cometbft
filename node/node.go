@@ -297,8 +297,10 @@ func NewNode(ctx context.Context,
 		logger.Error("Failed to delete genesis doc from DB ", err)
 	}
 
+	// [yiiguo] 创建测量工具
 	csMetrics, p2pMetrics, memplMetrics, smMetrics, abciMetrics, bsMetrics, ssMetrics := metricsProvider(genDoc.ChainID)
 
+	// [yiiguo] 创建 proxyApp
 	// Create the proxyApp and establish connections to the ABCI app (consensus, mempool, query).
 	proxyApp, err := createAndStartProxyAppConns(clientCreator, logger, abciMetrics)
 	if err != nil {
@@ -366,6 +368,7 @@ func NewNode(ctx context.Context,
 
 	logNodeStartupInfo(state, pubKey, logger, consensusLogger)
 
+	// [yiiguo] 创建交易池
 	mempool, mempoolReactor := createMempoolAndMempoolReactor(config, proxyApp, state, waitSync, memplMetrics, logger)
 
 	evidenceReactor, evidencePool, err := createEvidenceReactor(config, dbProvider, stateStore, blockStore, logger)

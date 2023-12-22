@@ -11,6 +11,7 @@ import (
 	nm "github.com/cometbft/cometbft/node"
 )
 
+// [yiiguo] 命令行程序的主入口
 func main() {
 	rootCmd := cmd.RootCmd
 	rootCmd.AddCommand(

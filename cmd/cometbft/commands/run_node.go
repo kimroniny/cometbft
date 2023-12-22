@@ -83,6 +83,7 @@ func AddNodeFlags(cmd *cobra.Command) {
 
 // NewRunNodeCmd returns the command that allows the CLI to start a node.
 // It can be used with a custom PrivValidator and in-process ABCI application.
+// [yiiguo] 启动节点
 func NewRunNodeCmd(nodeProvider nm.Provider) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "start",
