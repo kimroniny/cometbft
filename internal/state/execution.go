@@ -106,6 +106,7 @@ func (blockExec *BlockExecutor) SetEventBus(eventBus types.BlockEventPublisher) 
 // The rest is given to txs, up to the max gas.
 //
 // Contract: application will not return more bytes than are sent over the wire.
+// [yiiguo] 先创建1个区块, 然后交给对应app的prepareProsal函数去过滤处理, 并根据处理后的信息重新构造block
 func (blockExec *BlockExecutor) CreateProposalBlock(
 	ctx context.Context,
 	height int64,
@@ -162,6 +163,7 @@ func (blockExec *BlockExecutor) CreateProposalBlock(
 	if err := txl.Validate(maxDataBytes); err != nil {
 		return nil, err
 	}
+	// [yiiguo] 这里是执行完成后的交易, 可以在这里将交易广播出去
 
 	return state.MakeBlock(height, txl, commit, evidence, proposerAddr), nil
 }

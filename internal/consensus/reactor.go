@@ -86,6 +86,7 @@ func (conR *Reactor) OnStart() error {
 	conR.subscribeToBroadcastEvents()
 	go conR.updateRoundStateRoutine()
 
+	// [yiiguo] 在这里会启动 consensusState, 也就是启动三阶段进程
 	if !conR.WaitSync() {
 		err := conR.conS.Start()
 		if err != nil {

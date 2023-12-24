@@ -98,7 +98,7 @@ func NewRunNodeCmd(nodeProvider nm.Provider) *cobra.Command {
 			if err != nil {
 				return fmt.Errorf("failed to create node: %w", err)
 			}
-
+			// [yiiguo] 启动节点
 			if err := n.Start(); err != nil {
 				return fmt.Errorf("failed to start node: %w", err)
 			}

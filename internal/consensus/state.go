@@ -139,6 +139,7 @@ type State struct {
 // StateOption sets an optional parameter on the State.
 type StateOption func(*State)
 
+// [yiiguo] state 才是共识的三阶段主逻辑所在的位置
 // NewState returns a new State.
 func NewState(
 	config *cfg.ConsensusConfig,
@@ -383,6 +384,7 @@ func (cs *State) OnStart() error {
 		return err
 	}
 
+	// [yiiguo] 共识三阶段核心逻辑接收其他peer的消息
 	// now start the receiveRoutine
 	go cs.receiveRoutine(0)
 
@@ -816,6 +818,7 @@ func (cs *State) receiveRoutine(maxSteps int) {
 
 		select {
 		case <-cs.txNotifier.TxsAvailable():
+			// [yiiguo] 通过交易来触发新的一轮共识
 			cs.handleTxsAvailable()
 
 		case mi = <-cs.peerMsgQueue:
@@ -1021,6 +1024,7 @@ func (cs *State) handleTxsAvailable() {
 
 		// +1ms to ensure RoundStepNewRound timeout always happens after RoundStepNewHeight
 		timeoutCommit := cs.StartTime.Sub(cmttime.Now()) + 1*time.Millisecond
+		// [yiiguo] receiveRoutine会等待timeout事件, 并调用handleTimeout函数
 		cs.scheduleTimeout(timeoutCommit, cs.Height, 0, cstypes.RoundStepNewRound)
 
 	case cstypes.RoundStepNewRound: // after timeoutCommit
@@ -1191,6 +1195,7 @@ func (cs *State) isProposer(address []byte) bool {
 	return bytes.Equal(cs.Validators.GetProposer().Address, address)
 }
 
+// [yiiguo] 创建新的区块
 func (cs *State) defaultDecideProposal(height int64, round int32) {
 	var block *types.Block
 	var blockParts *types.PartSet
@@ -1202,6 +1207,7 @@ func (cs *State) defaultDecideProposal(height int64, round int32) {
 	} else {
 		// Create a new proposal block from state/txs from the mempool.
 		var err error
+		// [yiiguo] 调用区块创建函数
 		block, err = cs.createProposalBlock(context.TODO())
 		if err != nil {
 			cs.Logger.Error("unable to create proposal block", "error", err)

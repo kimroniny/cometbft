@@ -522,6 +522,7 @@ func NewNode(ctx context.Context,
 	return node, nil
 }
 
+// [yiiguo] 启动节点
 // OnStart starts the Node. It implements service.Service.
 func (n *Node) OnStart() error {
 	now := cmttime.Now()
@@ -562,6 +563,7 @@ func (n *Node) OnStart() error {
 
 	n.isListening = true
 
+	// [yiiguo] 在这里会启动共识的reactor, 共识的reactor会启动三阶段循环
 	// Start the switch (the P2P server).
 	err = n.sw.Start()
 	if err != nil {
