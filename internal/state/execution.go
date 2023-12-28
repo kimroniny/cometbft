@@ -164,6 +164,8 @@ func (blockExec *BlockExecutor) CreateProposalBlock(
 		return nil, err
 	}
 	// [yiiguo] 这里是执行完成后的交易, 可以在这里将交易广播出去
+	// [yiiguo] 2023年12月28日21:30:18, 这里不是执行完成后的交易, 只是在propose时执行应用侧定义的propose策略
+	// [yiiguo] 对于 tenderint 而言, 交易的执行是在共识完成之后的
 
 	return state.MakeBlock(height, txl, commit, evidence, proposerAddr), nil
 }
